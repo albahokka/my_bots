@@ -1,15 +1,20 @@
-"""Importing modules to create a bot"""
+"""Импортируем модули, необходимые для дальнейшей работы"""
 import config_gifanimeeeeebot
 import telebot
 import subprocess
 import time
 
+"""Создаем список 'nmb' от 0 до 10000"""
 nmb = list(range(0, 10001))
 
+"""Создаем функцию - запуск новых процессов"""
 def anime(a, b, m):
     subprocess.Popen([a, b, m])
 
+
+"""Создаем функцию с пропуском через проверку истинности"""
 def gifan(message):
+    global op
     if len(str(message.text)) == 1:
         op = 'output_gif_' + '0000' + str(message.text) + '.gif'
     elif len(str(message.text)) == 2:
@@ -20,21 +25,25 @@ def gifan(message):
         op = 'output_gif_' + '0' + str(message.text) + '.gif'
     elif len(str(message.text)) == 5:
         op = 'output_gif_' + str(message.text) + '.gif'
-    gif_way = 'C:/Users/Albinus/Desktop/python albinka/bots/gifanimeeeeebot/'\
+    op = str(op)
+    """Создаем аргумент и присваиваем ему значение в виде пути"""
+    gif_way = 'C:/Users/Albinus/Desktop/python albinka/bots/gifanimeeeeebot/' \
               + op
     arg = 'rb'
-
+    """Бот отправляет сообщение в чат в виде гифки"""
     bot.send_animation(message.chat.id, animation=open(gif_way, arg))
 
 
-"""Token transfer to the bot from the module"""
+"""Создаем аргумент и присваиваем ему значение с токеном бота"""
 bot = telebot.TeleBot(config_gifanimeeeeebot.token)
 
-"""Variation of the start of the bot"""
+
+"""Присваиваем боту команду 'старт', и сообщение, которое он будет высылать"""
 @bot.message_handler(commands=['start'])
 def send_start(message):
     bot.reply_to(message, 'Hello, send me any positive number!')
 
+"""Присваиваем боту команду 'помощь', и сообщение, которое он будет высылать"""
 @bot.message_handler(commands=['help'])
 def send_help(message):
     bot.reply_to(message, '''
@@ -42,7 +51,8 @@ def send_help(message):
 1. Enter any positive number
 2. Wait a couple of seconds''')
 
-"""Setting the bot's response to the content in the form of text"""
+
+"""Настройка реакции бота на контент в виде текста"""
 @bot.message_handler(content_types=["text"])
 def number(message):
     for i in nmb:
@@ -60,6 +70,7 @@ def number(message):
                                               'number... Try again.')
             break
 
-"""Exclusion of stopping the bot in case of an error"""
+
+"""Исключение остановки бота в случае ошибки"""
 if __name__ == '__main__':
     bot.infinity_polling()
